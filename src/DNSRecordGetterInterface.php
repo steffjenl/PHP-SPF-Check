@@ -16,4 +16,6 @@ interface DNSRecordGetterInterface
     public function exists($domain);
     public function resetRequestCount();
     public function countRequest();
+    public function getCountRequest();
+    public function setDNSLookupCounter($active);
 }

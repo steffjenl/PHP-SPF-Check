@@ -67,6 +67,16 @@ class SPFCheck
         return $this->doIsIPAllowed($ipAddress, $domain, true);
     }
 
+    /**
+     * Get last request counter value
+     *
+     * @return integer
+     */
+    public function getLastRequestCount()
+    {
+        return $this->DNSRecordGetter->getCountRequest();
+    }
+
     protected function doIsIPAllowed($ipAddress, $domain, $resetRequestCount)
     {
         if (!$domain) {

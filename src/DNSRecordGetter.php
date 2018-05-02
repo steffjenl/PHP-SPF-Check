@@ -13,6 +13,7 @@ use Mika56\SPFCheck\Exception\DNSLookupLimitReachedException;
 class DNSRecordGetter implements DNSRecordGetterInterface
 {
     protected $requestCount = 0;
+    protected $dnslookupcounter = true;
 
     /**
      * @param $domain string The domain to get SPF record
@@ -114,7 +115,20 @@ class DNSRecordGetter implements DNSRecordGetterInterface
     public function countRequest()
     {
         if (++$this->requestCount > 10) {
-            throw new DNSLookupLimitReachedException();
+            if ($this->dnslookupcounter)
+            {
+                throw new DNSLookupLimitReachedException();
+            }
         }
+    }
+
+    public function getCountRequest()
+    {
+        return $this->requestCount;
+    }
+
+    public function setDNSLookupCounter($active)
+    {
+        $this->dnslookupcounter = $active;
     }
 }

@@ -15,6 +15,7 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
 {
 
     protected $requestCount = 0;
+    protected $dnslookupcounter = true;
     protected $nameserver = "8.8.8.8";
     protected $port = 53;
     protected $timeout = 30;
@@ -44,12 +45,13 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
      * @param int $timeout
      * @param bool $udp
      */
-    public function __construct($nameserver = "8.8.8.8", $port = 53, $timeout = 30, $udp = true)
+    public function __construct($nameserver = "8.8.8.8", $port = 53, $timeout = 30, $udp = true, $dnslookupcounter = true)
     {
-        $this->nameserver = $nameserver;
-        $this->port       = $port;
-        $this->timeout    = $timeout;
-        $this->udp        = $udp;
+        $this->nameserver           = $nameserver;
+        $this->port                 = $port;
+        $this->timeout              = $timeout;
+        $this->udp                  = $udp;
+        $this->dnslookupcounter     = $dnslookupcounter;
     }
 
     /**
@@ -160,8 +162,21 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
     public function countRequest()
     {
         if (++$this->requestCount > 10) {
-            throw new DNSLookupLimitReachedException();
+            if ($this->dnslookupcounter)
+            {
+                throw new DNSLookupLimitReachedException();
+            }
         }
+    }
+
+    public function getCountRequest()
+    {
+        return $this->requestCount;
+    }
+
+    public function setDNSLookupCounter($active)
+    {
+        $this->dnslookupcounter = $active;
     }
 
     public function dns_get_record($question, $type)
