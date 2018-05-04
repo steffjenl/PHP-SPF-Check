@@ -96,11 +96,7 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
         $dkimRecords = array();
         foreach ($records as $record) {
             if ($record['type'] == 'TXT') {
-                $txt = strtolower($record['txt']);
-                // An SPF record can be empty (no mechanism)
-                if ($txt == 'v=DKIM1' || stripos($txt, 'v=DKIM1 ') === 0) {
-                    $dkimRecords[] = $txt;
-                }
+                $dkimRecords[] = $record['txt'];
             }
         }
 
