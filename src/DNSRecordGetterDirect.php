@@ -82,12 +82,13 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
 
     /**
      * @param $domain string The domain to get DKIM record
+     * @parem $selector string The DKIM selector
      * @return string[] The DKIM record(s)
      * @throws DNSLookupException
      */
-    public function getDKIMRecordForDomain($domain)
+    public function getDKIMRecordForDomain($domain, $selector)
     {
-        $records = $this->dns_get_record($domain, "TXT");
+        $records = $this->dns_get_record($selector . '._domainkey.' . $domain, "TXT");
         if (false === $records) {
             throw new DNSLookupException;
         }
