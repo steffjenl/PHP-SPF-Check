@@ -80,6 +80,32 @@ class DNSRecordGetterDirect implements DNSRecordGetterInterface
         return $spfRecords;
     }
 
+    /**
+     * @param $domain string The domain to get DKIM record
+     * @return string[] The DKIM record(s)
+     * @throws DNSLookupException
+     */
+    public function getDKIMRecordForDomain($domain)
+    {
+        $records = $this->dns_get_record($domain, "TXT");
+        if (false === $records) {
+            throw new DNSLookupException;
+        }
+
+        $dkimRecords = array();
+        foreach ($records as $record) {
+            if ($record['type'] == 'TXT') {
+                $txt = strtolower($record['txt']);
+                // An SPF record can be empty (no mechanism)
+                if ($txt == 'v=DKIM1' || stripos($txt, 'v=DKIM1 ') === 0) {
+                    $dkimRecords[] = $txt;
+                }
+            }
+        }
+
+        return $dkimRecords;
+    }
+
     public function resolveA($domain, $ip4only = false)
     {
         $records = $this->dns_get_record($domain, "A");

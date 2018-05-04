@@ -18,4 +18,5 @@ interface DNSRecordGetterInterface
     public function countRequest();
     public function getCountRequest();
     public function setDNSLookupCounter($active);
+    public function getDKIMRecordForDomain($domain);
 }
